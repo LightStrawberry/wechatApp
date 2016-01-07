@@ -1,75 +1,70 @@
 <?php
 
-    require "test.php";
+require "url.php";
+require "tools.php";
+require 'db.php';
 
-    header("Content-Type: text/html;charset=utf-8");
+header("Content-Type: text/html;charset=utf-8");
 
         //构造url管理器
-        $query = "湖工大在线";
+$wechat_name = "之式Gishtone";
 
-        $search_url = "http://weixin.sogou.com/weixin?type=1&query=".$query."&ie=utf8";
+$ret = get_open_id_from_name($wechat_name);
 
-        $ret = sogou_weixin($search_url);
+$page = 1;
 
-        $openid = substr($ret,12,28);
-        $ext = substr($ret,49);
+//http://weixin.sogou.com/gzh?openid=oIWsFt_pdO6l0yAhJaGHnuokXYu4&ext=7muVIkIDeYvnt2jzb9oKPIe5yjE8XiJ7vw6NpQ8brae-LaR3JpZUkYh4QR6twKFr 武汉吃喝玩乐
+//http://weixin.sogou.com/gzh?openid=oIWsFtyU_rHhZ4RHhZuFxHebat5U&ext=7muVIkIDeYtU_TElitYIkXBuehdpuySjK88y-VFIPaBXeFLL6KHAQl4X6kHEcHqU 湖工大在线
+//http://weixin.sogou.com/gzh?openid=oIWsFt7YYaY9jQePCR4MyQxkLOQo&ext=meTK-Q6CgYRzLem_Dup2aGrvDJ8awd_Es0FD-zw6WKlKTEEnHhqnQrtUsWE4ZE4W 之式
 
-        //http://weixin.sogou.com/gzh?openid=oIWsFt_pdO6l0yAhJaGHnuokXYu4&ext=7muVIkIDeYvnt2jzb9oKPIe5yjE8XiJ7vw6NpQ8brae-LaR3JpZUkYh4QR6twKFr 武汉吃喝玩乐
-        //http://weixin.sogou.com/gzh?openid=oIWsFtyU_rHhZ4RHhZuFxHebat5U&ext=7muVIkIDeYtU_TElitYIkXBuehdpuySjK88y-VFIPaBXeFLL6KHAQl4X6kHEcHqU 湖工大在线
-        //http://weixin.sogou.com/gzh?openid=oIWsFt7YYaY9jQePCR4MyQxkLOQo&ext=meTK-Q6CgYRzLem_Dup2aGrvDJ8awd_Es0FD-zw6WKlKTEEnHhqnQrtUsWE4ZE4W 之式
+$weixin_gzh = array(['name' => "武汉吃喝玩乐", 'openid' => "oIWsFt_pdO6l0yAhJaGHnuokXYu4", 'ext' => "7muVIkIDeYvnt2jzb9oKPIe5yjE8XiJ7vw6NpQ8brae-LaR3JpZUkYh4QR6twKFr"],
+                    ['name' => "湖工大在线", 'openid' => "oIWsFtyU_rHhZ4RHhZuFxHebat5U", 'ext' => "meTK-Q6CgYRoD8SJVZaGgQ0SN5gKEPuRNEap337uGS6dbRE7Ckvwirtg26jTVlLt"],
+                    ['name' => "之式Gishtone", 'openid' => "oIWsFt7YYaY9jQePCR4MyQxkLOQo", 'ext' => "meTK-Q6CgYRzLem_Dup2aGrvDJ8awd_Es0FD-zw6WKlKTEEnHhqnQrtUsWE4ZE4W"]);
 
-        $weixin_gzh = array(['name' => "武汉吃喝玩乐", 'openid' => "oIWsFt_pdO6l0yAhJaGHnuokXYu4", 'ext' => "7muVIkIDeYvnt2jzb9oKPIe5yjE8XiJ7vw6NpQ8brae-LaR3JpZUkYh4QR6twKFr"],
-                            ['name' => "湖工大在线", 'openid' => "oIWsFtyU_rHhZ4RHhZuFxHebat5U", 'ext' => "meTK-Q6CgYRoD8SJVZaGgQ0SN5gKEPuRNEap337uGS6dbRE7Ckvwirtg26jTVlLt"],
-                            ['name' => "之式Gishtone", 'openid' => "oIWsFt7YYaY9jQePCR4MyQxkLOQo", 'ext' => "meTK-Q6CgYRzLem_Dup2aGrvDJ8awd_Es0FD-zw6WKlKTEEnHhqnQrtUsWE4ZE4W"]);
+$url = "http://weixin.sogou.com/gzhjs?openid=".$ret['open_id']."&ext=".$ret['ext']."&cb=sogou.weixin_gzhcb&page=".$page."&gzhArtKeyWord=&tsn=0&t=1452072186637&_=1452072186462";
 
-        $url = "http://weixin.sogou.com/gzhjs?openid=".$openid."&ext=".$ext."&cb=sogou.weixin_gzhcb&page=1&gzhArtKeyWord=&tsn=0&t=1452072186637&_=1452072186462";
+//$url = "http://weixin.sogou.com/gzhjs?openid=oIWsFt7YYaY9jQePCR4MyQxkLOQo&ext=meTK-Q6CgYRzLem_Dup2aGrvDJ8awd_Es0FD-zw6WKlKTEEnHhqnQrtUsWE4ZE4W&cb=sogou.weixin_gzhcb&page=1&gzhArtKeyWord=&tsn=0&t=1452072186637&_=1452072186462";
+//$url = "http://weixin.sogou.com/gzhjs?openid=oIWsFtyU_rHhZ4RHhZuFxHebat5U&ext=meTK-Q6CgYRoD8SJVZaGgQ0SN5gKEPuRNEap337uGS6dbRE7Ckvwiq3C2f8xZn-0&cb=sogou.weixin_gzhcb&page=1&gzhArtKeyWord=&tsn=0&t=1452067211769&_=1452067211552";
+//$url = "http://weixin.sogou.com/gzhjs?openid=oIWsFt_pdO6l0yAhJaGHnuokXYu4&ext=meTK-Q6CgYR0GTTEwAMdVVs_IQ5SfCg4FhANfVlp3Yfrd4eeyxZaOhbhV7h0F1xp&cb=sogou.weixin_gzhcb&page=1&gzhArtKeyWord=&tsn=0&t=1452062763761&_=1452062763354";
 
-        //$url = "http://weixin.sogou.com/gzhjs?openid=oIWsFt7YYaY9jQePCR4MyQxkLOQo&ext=meTK-Q6CgYRzLem_Dup2aGrvDJ8awd_Es0FD-zw6WKlKTEEnHhqnQrtUsWE4ZE4W&cb=sogou.weixin_gzhcb&page=1&gzhArtKeyWord=&tsn=0&t=1452072186637&_=1452072186462";
+//抓取数据的部分
 
-        //$url = "http://weixin.sogou.com/gzhjs?openid=oIWsFtyU_rHhZ4RHhZuFxHebat5U&ext=meTK-Q6CgYRoD8SJVZaGgQ0SN5gKEPuRNEap337uGS6dbRE7Ckvwiq3C2f8xZn-0&cb=sogou.weixin_gzhcb&page=1&gzhArtKeyWord=&tsn=0&t=1452067211769&_=1452067211552";
-        //$url = "http://weixin.sogou.com/gzhjs?openid=oIWsFt_pdO6l0yAhJaGHnuokXYu4&ext=meTK-Q6CgYR0GTTEwAMdVVs_IQ5SfCg4FhANfVlp3Yfrd4eeyxZaOhbhV7h0F1xp&cb=sogou.weixin_gzhcb&page=1&gzhArtKeyWord=&tsn=0&t=1452062763761&_=1452062763354";
-        
-        //抓取数据的部分
+// create curl resource 
+$ch = curl_init(); 
 
-        // create curl resource 
-        $ch = curl_init(); 
+// set url 
+curl_setopt($ch, CURLOPT_URL, $url);
 
-        // set url 
-        curl_setopt($ch, CURLOPT_URL, $url);
+//return the transfer as a string 
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
 
-        //return the transfer as a string 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+// $output contains the output string 
+$output = curl_exec($ch);
 
-        // $output contains the output string 
-        $output = curl_exec($ch);
+// close curl resource to free up system resources 
+curl_close($ch);
 
-        // close curl resource to free up system resources 
-        curl_close($ch);
+$output = substr($output,19,-10);
 
-        $output = substr($output,19,-10);
+$a = json_decode($output);
 
-        $a = json_decode($output);
+echo "全部微信文:".$a->totalItems;
 
-        echo "全部微信文:".$a->totalItems;
+$weixin = $a->items;
 
-        $weixin = $a->items;
+//var_dump($weixin[0]);
+foreach ($weixin as $key) {
+    $b = xmltoarray($key);
 
-        var_dump($weixin[0]);
-        foreach ($weixin as $key) {
-            $b = xmltoarray($key);
+    $title = cut_char($b['item']['display']['title']);
+    $imglink = cut_char($b['item']['display']['imglink']);
+    $headimage = cut_char($b['item']['display']['headimage']);
+    $sourcename = cut_char($b['item']['display']['sourcename']);
+    $site = cut_char($b['item']['display']['site']);
+    $date = cut_char($b['item']['display']['date']);
+}
 
-            $title = cut_char($b['item']['display']['title']);
-            $imglink = cut_char($b['item']['display']['imglink']);
-            $headimage = cut_char($b['item']['display']['headimage']);
-            $sourcename = cut_char($b['item']['display']['sourcename']);
-            $site = cut_char($b['item']['display']['site']);
-            $date = cut_char($b['item']['display']['date']);
 
-            echo $imglink;
-            echo "<br>";
-            echo $title;
-            echo $date;
-        }
 
         // $b = xmltoarray($weixin[0]);
 
@@ -87,62 +82,62 @@
 
         //echo $output;
 
-        function xmltoarray($xml)
-        {
-            $arr = xml_to_array($xml);
-            $key = array_keys($arr);
-            return $arr[$key[0]];
-        }
+function xmltoarray($xml)
+{
+    $arr = xml_to_array($xml);
+    $key = array_keys($arr);
+    return $arr[$key[0]];
+}
 
-        function xml_to_array($xml)
+function xml_to_array($xml)
+{
+    $reg = "/<(\\w+)[^>]*?>([\\x00-\\xFF]*?)<\\/\\1>/";
+    if(preg_match_all($reg, $xml, $matches))
+    {
+        $count = count($matches[0]);
+        $arr = array();
+        for($i = 0; $i < $count; $i++)
         {
-            $reg = "/<(\\w+)[^>]*?>([\\x00-\\xFF]*?)<\\/\\1>/";
-            if(preg_match_all($reg, $xml, $matches))
+            $key= $matches[1][$i];
+            $val = xml_to_array( $matches[2][$i] );  // 递归
+            if(array_key_exists($key, $arr))
             {
-                $count = count($matches[0]);
-                $arr = array();
-                for($i = 0; $i < $count; $i++)
+                if(is_array($arr[$key]))
                 {
-                    $key= $matches[1][$i];
-                    $val = xml_to_array( $matches[2][$i] );  // 递归
-                    if(array_key_exists($key, $arr))
+                    if(!array_key_exists(0,$arr[$key]))
                     {
-                        if(is_array($arr[$key]))
-                        {
-                            if(!array_key_exists(0,$arr[$key]))
-                            {
-                                $arr[$key] = array($arr[$key]);
-                            }
-                        }else{
-                            $arr[$key] = array($arr[$key]);
-                        }
-                        $arr[$key][] = $val;
-                    }else{
-                        $arr[$key] = $val;
+                        $arr[$key] = array($arr[$key]);
                     }
+                }else{
+                    $arr[$key] = array($arr[$key]);
                 }
-                return $arr;
+                $arr[$key][] = $val;
             }else{
-                return $xml;
+                $arr[$key] = $val;
             }
         }
+        return $arr;
+    }else{
+        return $xml;
+    }
+}
 
-        function cut_char($char)
-        {
-            return substr($char,9,-3);
-        }
+function cut_char($char)
+{
+    return substr($char,9,-3);
+}
 
-        /**
-        function uni_decode($uncode)
-        {
-                $word = json_decode(preg_replace_callback('/&#(\d{5});/', create_function('$dec', 'return \'\\u\'.dechex($dec[1]);'), '"'.$uncode.'"'));
-                return $word;
-        }
-        **/ 
-        function pregCh($test){  
-        //utf8下匹配中文  
-            $rule ='/([\x{4e00}-\x{9fa5}]){1}/u';  
-            preg_match_all($rule,$test,$result);  
-            return $result;
-        }
+/**
+function uni_decode($uncode)
+{
+        $word = json_decode(preg_replace_callback('/&#(\d{5});/', create_function('$dec', 'return \'\\u\'.dechex($dec[1]);'), '"'.$uncode.'"'));
+        return $word;
+}
+**/ 
+function pregCh($test){  
+//utf8下匹配中文  
+    $rule ='/([\x{4e00}-\x{9fa5}]){1}/u';  
+    preg_match_all($rule,$test,$result);  
+    return $result;
+}
 ?>
