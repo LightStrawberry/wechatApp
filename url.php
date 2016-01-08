@@ -62,6 +62,7 @@ function get_open_id_from_name($wechat_name) {
 	);
 
 	$response = get($base_url, $query, $header, "/tmp/cookie");
+	// dd($response);
 
 	if($response) {
 		// get open_id & ext here
@@ -83,7 +84,7 @@ function get_open_id_from_name($wechat_name) {
 
 function sogou_weixin($url) { 
 
-	$ch = curl_init(); 
+	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
 	curl_setopt($ch, CURLOPT_URL, $url); 
 	curl_setopt($ch, CURLOPT_POST, 1); 
@@ -102,6 +103,25 @@ function sogou_weixin($url) {
 	$ret = $html->find('.wx-rb');
 
 	return $ret[0]->href;
-
 }
+
+function get_weixin_real_url($url)
+{
+	$base_url = "http://weixin.sogou.com".$url;
+
+	$query = array();
+
+	$header = array(
+			'Accept-Language: zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4,ja;q=0.2',
+			'Upgrade-Insecure-Requests: 1',
+			'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36',
+			'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+			'Connection: keep-alive' 
+		);
+
+	$response = get($base_url, $query, $header, "/tmp/cookie");
+
+	dd($response);
+}
+
 ?>

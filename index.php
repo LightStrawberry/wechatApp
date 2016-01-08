@@ -7,61 +7,84 @@ require 'db.php';
 header("Content-Type: text/html;charset=utf-8");
 
         //构造url管理器
-$wechat_name = "之式Gishtone";
+$wechat_name = "湖工大在线";
 
 $ret = get_open_id_from_name($wechat_name);
 
 $page = 1;
 
-//http://weixin.sogou.com/gzh?openid=oIWsFt_pdO6l0yAhJaGHnuokXYu4&ext=7muVIkIDeYvnt2jzb9oKPIe5yjE8XiJ7vw6NpQ8brae-LaR3JpZUkYh4QR6twKFr 武汉吃喝玩乐
-//http://weixin.sogou.com/gzh?openid=oIWsFtyU_rHhZ4RHhZuFxHebat5U&ext=7muVIkIDeYtU_TElitYIkXBuehdpuySjK88y-VFIPaBXeFLL6KHAQl4X6kHEcHqU 湖工大在线
-//http://weixin.sogou.com/gzh?openid=oIWsFt7YYaY9jQePCR4MyQxkLOQo&ext=meTK-Q6CgYRzLem_Dup2aGrvDJ8awd_Es0FD-zw6WKlKTEEnHhqnQrtUsWE4ZE4W 之式
+for($page = 1; $page <= 10; $page++)
+{
 
-$weixin_gzh = array(['name' => "武汉吃喝玩乐", 'openid' => "oIWsFt_pdO6l0yAhJaGHnuokXYu4", 'ext' => "7muVIkIDeYvnt2jzb9oKPIe5yjE8XiJ7vw6NpQ8brae-LaR3JpZUkYh4QR6twKFr"],
-                    ['name' => "湖工大在线", 'openid' => "oIWsFtyU_rHhZ4RHhZuFxHebat5U", 'ext' => "meTK-Q6CgYRoD8SJVZaGgQ0SN5gKEPuRNEap337uGS6dbRE7Ckvwirtg26jTVlLt"],
-                    ['name' => "之式Gishtone", 'openid' => "oIWsFt7YYaY9jQePCR4MyQxkLOQo", 'ext' => "meTK-Q6CgYRzLem_Dup2aGrvDJ8awd_Es0FD-zw6WKlKTEEnHhqnQrtUsWE4ZE4W"]);
+    //http://weixin.sogou.com/gzh?openid=oIWsFt_pdO6l0yAhJaGHnuokXYu4&ext=7muVIkIDeYvnt2jzb9oKPIe5yjE8XiJ7vw6NpQ8brae-LaR3JpZUkYh4QR6twKFr 武汉吃喝玩乐
+    //http://weixin.sogou.com/gzh?openid=oIWsFtyU_rHhZ4RHhZuFxHebat5U&ext=7muVIkIDeYtU_TElitYIkXBuehdpuySjK88y-VFIPaBXeFLL6KHAQl4X6kHEcHqU 湖工大在线
+    //http://weixin.sogou.com/gzh?openid=oIWsFt7YYaY9jQePCR4MyQxkLOQo&ext=meTK-Q6CgYRzLem_Dup2aGrvDJ8awd_Es0FD-zw6WKlKTEEnHhqnQrtUsWE4ZE4W 之式
 
-$url = "http://weixin.sogou.com/gzhjs?openid=".$ret['open_id']."&ext=".$ret['ext']."&cb=sogou.weixin_gzhcb&page=".$page."&gzhArtKeyWord=&tsn=0&t=1452072186637&_=1452072186462";
+    $weixin_gzh = array(['name' => "武汉吃喝玩乐", 'openid' => "oIWsFt_pdO6l0yAhJaGHnuokXYu4", 'ext' => "7muVIkIDeYvnt2jzb9oKPIe5yjE8XiJ7vw6NpQ8brae-LaR3JpZUkYh4QR6twKFr"],
+                        ['name' => "湖工大在线", 'openid' => "oIWsFtyU_rHhZ4RHhZuFxHebat5U", 'ext' => "meTK-Q6CgYRoD8SJVZaGgQ0SN5gKEPuRNEap337uGS6dbRE7Ckvwirtg26jTVlLt"],
+                        ['name' => "之式Gishtone", 'openid' => "oIWsFt7YYaY9jQePCR4MyQxkLOQo", 'ext' => "meTK-Q6CgYRzLem_Dup2aGrvDJ8awd_Es0FD-zw6WKlKTEEnHhqnQrtUsWE4ZE4W"]);
 
-//$url = "http://weixin.sogou.com/gzhjs?openid=oIWsFt7YYaY9jQePCR4MyQxkLOQo&ext=meTK-Q6CgYRzLem_Dup2aGrvDJ8awd_Es0FD-zw6WKlKTEEnHhqnQrtUsWE4ZE4W&cb=sogou.weixin_gzhcb&page=1&gzhArtKeyWord=&tsn=0&t=1452072186637&_=1452072186462";
-//$url = "http://weixin.sogou.com/gzhjs?openid=oIWsFtyU_rHhZ4RHhZuFxHebat5U&ext=meTK-Q6CgYRoD8SJVZaGgQ0SN5gKEPuRNEap337uGS6dbRE7Ckvwiq3C2f8xZn-0&cb=sogou.weixin_gzhcb&page=1&gzhArtKeyWord=&tsn=0&t=1452067211769&_=1452067211552";
-//$url = "http://weixin.sogou.com/gzhjs?openid=oIWsFt_pdO6l0yAhJaGHnuokXYu4&ext=meTK-Q6CgYR0GTTEwAMdVVs_IQ5SfCg4FhANfVlp3Yfrd4eeyxZaOhbhV7h0F1xp&cb=sogou.weixin_gzhcb&page=1&gzhArtKeyWord=&tsn=0&t=1452062763761&_=1452062763354";
+    $url = "http://weixin.sogou.com/gzhjs?openid=".$ret['open_id']."&ext=".$ret['ext']."&cb=sogou.weixin_gzhcb&page=".$page."&gzhArtKeyWord=&tsn=0&t=1452072186637&_=1452072186462";
 
-//抓取数据的部分
+    //$url = "http://weixin.sogou.com/gzhjs?openid=oIWsFt7YYaY9jQePCR4MyQxkLOQo&ext=meTK-Q6CgYRzLem_Dup2aGrvDJ8awd_Es0FD-zw6WKlKTEEnHhqnQrtUsWE4ZE4W&cb=sogou.weixin_gzhcb&page=1&gzhArtKeyWord=&tsn=0&t=1452072186637&_=1452072186462";
+    //$url = "http://weixin.sogou.com/gzhjs?openid=oIWsFtyU_rHhZ4RHhZuFxHebat5U&ext=meTK-Q6CgYRoD8SJVZaGgQ0SN5gKEPuRNEap337uGS6dbRE7Ckvwiq3C2f8xZn-0&cb=sogou.weixin_gzhcb&page=1&gzhArtKeyWord=&tsn=0&t=1452067211769&_=1452067211552";
+    //$url = "http://weixin.sogou.com/gzhjs?openid=oIWsFt_pdO6l0yAhJaGHnuokXYu4&ext=meTK-Q6CgYR0GTTEwAMdVVs_IQ5SfCg4FhANfVlp3Yfrd4eeyxZaOhbhV7h0F1xp&cb=sogou.weixin_gzhcb&page=1&gzhArtKeyWord=&tsn=0&t=1452062763761&_=1452062763354";
 
-// create curl resource 
-$ch = curl_init(); 
+    //抓取数据的部分
 
-// set url 
-curl_setopt($ch, CURLOPT_URL, $url);
+    // create curl resource 
+    $ch = curl_init(); 
 
-//return the transfer as a string 
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+    // set url 
+    curl_setopt($ch, CURLOPT_URL, $url);
 
-// $output contains the output string 
-$output = curl_exec($ch);
+    //return the transfer as a string 
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
 
-// close curl resource to free up system resources 
-curl_close($ch);
+    // $output contains the output string 
+    $output = curl_exec($ch);
 
-$output = substr($output,19,-10);
+    // close curl resource to free up system resources 
+    curl_close($ch);
 
-$a = json_decode($output);
+    $output = substr($output,19,-10);
 
-echo "全部微信文:".$a->totalItems;
+    $a = json_decode($output);
 
-$weixin = $a->items;
+    echo "全部微信文:".$a->totalItems;
 
-//var_dump($weixin[0]);
-foreach ($weixin as $key) {
-    $b = xmltoarray($key);
+    $weixin = $a->items;
 
-    $title = cut_char($b['item']['display']['title']);
-    $imglink = cut_char($b['item']['display']['imglink']);
-    $headimage = cut_char($b['item']['display']['headimage']);
-    $sourcename = cut_char($b['item']['display']['sourcename']);
-    $site = cut_char($b['item']['display']['site']);
-    $date = cut_char($b['item']['display']['date']);
+    //var_dump($weixin[0]);
+    foreach ($weixin as $key) {
+        $b = xmltoarray($key);
+
+        $data = array();
+
+        $data['docid'] = cut_char($b['item']['display']['docid']);
+        $data['tplid'] = cut_char($b['item']['display']['tplid']);
+        $data['title'] = cut_char($b['item']['display']['title']);
+        $data['url'] = cut_char($b['item']['display']['url']);
+        $data['imglink'] = cut_char($b['item']['display']['imglink']);
+        $data['headimage'] = cut_char($b['item']['display']['headimage']);
+        $data['content168'] = cut_char($b['item']['display']['content168']);
+        $data['content'] = cut_char($b['item']['display']['content168']);
+        $data['showurl'] = cut_char($b['item']['display']['sourcename']);
+        $data['publish_date'] = cut_char($b['item']['display']['showurl']);
+        $data['sourcename'] = cut_char($b['item']['display']['date']);
+
+        //$data['url'] = get_weixin_real_url($data['url']);
+
+        insert_weixin_data($data);
+
+        echo "ok";
+
+        //暂停 10 秒
+        sleep(10);
+
+        //docid, tplid, title, url, imglink, headimage, content168, content, showurl, publish_date, sourcename
+    }
+    sleep(10);
 }
 
 
